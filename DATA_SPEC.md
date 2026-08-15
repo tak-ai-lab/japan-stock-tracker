@@ -20,7 +20,7 @@ data/
 │   ├── 1605.T.csv       # INPEX
 │   └── 9984.T.csv       # ソフトバンクグループ
 ├── intraday/
-│   ├── 8058.T.csv       # 三菱商事（5分足・直近5営業日分上書き・毎日11:20実行）
+│   ├── 8058.T.csv       # 三菱商事（15分足・直近5営業日分上書き・毎日11:20実行）
 │   └── ... (全10銘柄)
 └── latest_summary.csv   # 全10銘柄の当日概況（わずか10行の超軽量サマリー）
 ```
@@ -41,7 +41,7 @@ date,open,high,low,close,volume,adj_close
 - **adj_close**: 調整後終値 (円)
 
 ### ② 分足データ (`data/intraday/{ticker}.csv`)
-直近5日間の5分足（約300行・約8KB）を上書き更新します。
+直近5日間の15分足（約120行・約6KB）を上書き更新します。
 ```csv
 datetime,open,high,low,close,volume
 2026-08-14 09:00:00,3120,3135,3115,3130,150000
@@ -74,7 +74,7 @@ URL: https://raw.githubusercontent.com/<YOUR_USER>/japan-stock-tracker/main/data
 
 ### ■ 特定銘柄の日中モメンタム分析（例：ソフトバンクG）
 ```text
-以下のソフトバンクG（9984.T）の直近5日間の5分足データを分析してください。
+以下のソフトバンクG（9984.T）の直近5日間の15分足データを分析してください。
 URL: https://raw.githubusercontent.com/<YOUR_USER>/japan-stock-tracker/main/data/intraday/9984.T.csv
 
 【分析依頼】
