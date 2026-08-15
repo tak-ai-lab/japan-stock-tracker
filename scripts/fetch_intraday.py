@@ -40,8 +40,8 @@ def fetch_intraday():
     for ticker in tickers:
         try:
             stock = yf.Ticker(ticker)
-            # 直近5日間の5分足（5m）を取得
-            hist = stock.history(period="5d", interval="5m")
+            # 直近5日間の5分足（15m）を取得
+            hist = stock.history(period="5d", interval="15m")
             if hist.empty:
                 print(f"⚠️ No intraday data returned for {ticker}")
                 continue
