@@ -1,9 +1,9 @@
-name: Fetch Daily Stock Prices
+name: Fetch Daily Stock Prices & Indicators
 
 on:
   schedule:
-    # 平日 17:00 JST (= 07:00 UTC) に自動実行 (東証大引け後)
-    - cron: '0 8 * * 1-5'
+    # 平日 16:00 JST (= 07:00 UTC) に自動実行 (東証大引け後)
+    - cron: '0 7 * * 1-5'
   workflow_dispatch: # GitHub画面からの手動実行ボタン
 
 jobs:
@@ -39,6 +39,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Auto-update daily stock prices [$(date '+%Y-%m-%d %H:%M:%S')]"
+            git commit -m "Auto-update daily stock prices & indicators [$(date '+%Y-%m-%d %H:%M:%S')]"
             git push
           fi
