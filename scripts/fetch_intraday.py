@@ -37,7 +37,6 @@ def fetch_intraday_ticker(ticker, max_retries=3):
     for attempt in range(1, max_retries + 1):
         try:
             stock = yf.Ticker(ticker)
-            # 5分足を直近5日分取得
             hist = stock.history(period="5d", interval="5m")
             if hist.empty:
                 print(f"[{ticker}] Attempt {attempt}: Empty intraday data. Retrying...")
@@ -90,7 +89,6 @@ def fetch_intraday():
         df = fetch_intraday_ticker(ticker)
         if df is not None and not df.empty:
             csv_file = os.path.join(INTRADAY_DIR, f"{ticker}.csv")
-            # 毎回直近5日分で安全に上書き
             df.to_csv(csv_file, index=False)
             print(f"✅ {ticker}: Intraday 5m saved ({len(df)} rows) -> {csv_file}")
         else:

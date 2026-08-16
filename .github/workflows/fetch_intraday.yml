@@ -2,9 +2,8 @@ name: Fetch Intraday Stock Prices
 
 on:
   schedule:
-    # 平日 11:20 JST (= 02:20 UTC) に自動実行 (前場引け直前)
     - cron: '20 2 * * 1-5'
-  workflow_dispatch: # GitHub画面からの手動実行ボタン
+  workflow_dispatch:
 
 jobs:
   fetch-and-commit:
