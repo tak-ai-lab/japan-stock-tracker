@@ -42,7 +42,7 @@ def fetch_intraday_ticker(ticker, max_retries=3):
     for attempt in range(1, max_retries + 1):
         try:
             stock = yf.Ticker(ticker)
-            hist = stock.history(period="5d", interval="5m")
+            hist = stock.history(period="5d", interval="15m")
             if hist.empty:
                 print(f"[{ticker}] Attempt {attempt}: Empty intraday data. Retrying in 2s...")
                 time.sleep(2)
@@ -88,7 +88,7 @@ def fetch_intraday_ticker(ticker, max_retries=3):
 
 def fetch_intraday():
     now_jst = datetime.now(JST)
-    print(f"[{now_jst.strftime('%Y-%m-%d %H:%M:%S')}] Starting intraday fetch (5m)...")
+    print(f"[{now_jst.strftime('%Y-%m-%d %H:%M:%S')}] Starting intraday fetch (15m)...")
 
     os.makedirs(INTRADAY_DIR, exist_ok=True)
     tickers = load_tickers()
@@ -103,7 +103,7 @@ def fetch_intraday():
         if df is not None and not df.empty:
             csv_file = os.path.join(INTRADAY_DIR, f"{ticker}.csv")
             df.to_csv(csv_file, index=False)
-            print(f"✅ [{i+1}/{len(tickers)}] {ticker}: Intraday 5m saved ({len(df)} rows) -> {csv_file}")
+            print(f"✅ [{i+1}/{len(tickers)}] {ticker}: Intraday 15m saved ({len(df)} rows) -> {csv_file}")
             success_count += 1
         else:
             print(f"❌ [{i+1}/{len(tickers)}] {ticker}: Failed to fetch intraday data.")
