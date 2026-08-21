@@ -38,7 +38,7 @@ def format_price(val):
     return round(val_float, 2)
 
 def fetch_intraday_ticker(ticker, max_retries=3):
-    """直近5営業日分の5分足を取得"""
+    """直近5営業日分の15分足を取得"""
     for attempt in range(1, max_retries + 1):
         try:
             stock = yf.Ticker(ticker)

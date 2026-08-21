@@ -21,8 +21,12 @@ def load_tickers():
             line = line.strip()
             if not line or line.startswith("#"):
                 continue
-            ticker = line.split()[0].strip()
-            tickers.append(ticker)
+            # #以降のコメントや空白を除去し、純粋な銘柄コードのみを抽出
+            ticker_code = line.split("#")[0].strip()
+            if ticker_code:
+                ticker = ticker_code.split()[0].strip()
+                if ticker:
+                    tickers.append(ticker)
     return tickers
 
 def format_num(val, decimals=2):
@@ -95,6 +99,11 @@ def calculate_technical_indicators(df):
     tr3 = (low - prev_close).abs()
     tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
     df["atr14"] = tr.ewm(alpha=1/14, min_periods=14, adjust=False).mean().round(2)
+
+    # 6. 52週高値 (過去252営業日[当日含む]のHighの最大値) & 信頼度フラグ
+    df["week52_high"] = high.rolling(window=252, min_periods=1).max().round(2)
+    rolling_count = high.rolling(window=252, min_periods=1).count()
+    df["week52_high_confidence"] = np.where(rolling_count >= 252, "full", "partial")
 
     return df
 
@@ -180,7 +189,7 @@ def fetch_and_update_ticker(ticker, max_retries=3):
     combined = combined.drop_duplicates(subset=["date"], keep="first")
     combined = combined.sort_values(by="date").reset_index(drop=True)
 
-    # 4. 全テクニカル指標の計算
+    # 4. 全テクニカル指標の計算（52週高値含む）
     final_df = calculate_technical_indicators(combined)
 
     # 5. CSVファイルへ保存
@@ -188,7 +197,7 @@ def fetch_and_update_ticker(ticker, max_retries=3):
     latest_row = final_df.iloc[-1]
     trade_date = str(latest_row["date"])
     latest_close = float(latest_row["close"])
-    print(f"✅ {ticker}: Updated {trade_date} (Total {len(final_df)} days, Close={latest_close}, AdjClose={latest_row.get('adj_close')}, RSI14={latest_row.get('rsi14')}, MA200={latest_row.get('ma200')})")
+    print(f"✅ {ticker}: Updated {trade_date} (Total {len(final_df)} days, Close={latest_close}, 52wHigh={latest_row.get('week52_high')}, RSI14={latest_row.get('rsi14')}, MA200={latest_row.get('ma200')})")
 
     # 6. 直近3営業日分のサマリー用データを生成
     recent_rows = final_df.tail(3)
@@ -244,7 +253,9 @@ def fetch_and_update_ticker(ticker, max_retries=3):
             "bb_mid": format_num(target_row.get("bb_mid", curr_close)),
             "bb_lower": format_num(target_row.get("bb_lower", curr_close)),
             "atr14": format_num(target_row.get("atr14", 0.0)),
-            "trend_status": trend
+            "trend_status": trend,
+            "week52_high": format_num(target_row.get("week52_high", target_row["high"])),
+            "week52_high_confidence": str(target_row.get("week52_high_confidence", "partial"))
         })
 
     return summary_items

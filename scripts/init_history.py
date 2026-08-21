@@ -1,8 +1,8 @@
 """
 init_history.py: 過去日足データ安全補完 & 株式分割対応 & テクニカル指標一括計算スクリプト
 - 既存の data/daily/{ticker}.csv にあるデータ（2026/1/1以降等）を1行も消さずに保護します。
-- 200日移動平均線や株式分割調整に必要な過去2年分の日足をYahoo Financeから安全に補完マージします。
-- 全期間の日足に対して MA5/25/75/200, RSI14, MACD, BB, ATR を一括計算してCSVを最新化します。
+- 200日移動平均線や株式分割調整、52週高値計算に必要な過去2年分の日足をYahoo Financeから安全に補完マージします。
+- 全期間の日足に対して MA5/25/75/200, RSI14, MACD, BB, ATR, 52週高値(week52_high, week52_high_confidence) を一括計算してCSVを最新化します。
 - 全10銘柄の直近3営業日分（全指標入り）の data/latest_summary.csv を生成します。
 """
 import os
@@ -29,7 +29,7 @@ def main():
         summary_df = pd.DataFrame(all_summary_rows)
         summary_df = summary_df.sort_values(by=["ticker", "date"]).reset_index(drop=True)
         summary_df.to_csv(SUMMARY_PATH, index=False)
-        print(f"\n🎉 Complete! All {len(tickers)} tickers updated with technical indicators and 3-day summary.")
+        print(f"\n🎉 Complete! All {len(tickers)} tickers updated with technical indicators, 52-week high, and 3-day summary.")
 
 if __name__ == "__main__":
     main()
