@@ -2,7 +2,7 @@ name: Fetch Daily Stock Prices & Indicators
 
 on:
   schedule:
-    - cron: '0 7 * * 1-5'  # 日本時間: 平日 16:00 JST
+    - cron: '22 7 * * 1-5'  # 日本時間: 平日 16:22 JST
   workflow_dispatch:
 
 jobs:

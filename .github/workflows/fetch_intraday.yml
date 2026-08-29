@@ -2,7 +2,7 @@ name: Fetch Intraday Stock Prices
 
 on:
   schedule:
-    - cron: '0 2 * * 1-5'  # 日本時間: 平日 11:0 JST
+    - cron: '56  1 * * 1-5'  # 日本時間: 平日 10:56 JST
   workflow_dispatch:
 
 jobs:
